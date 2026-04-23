@@ -5,8 +5,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Font -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Calendar library -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <style>
     * {
@@ -22,22 +26,22 @@
 
     /* HERO */
     .hero {
-      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
                   url('https://images.unsplash.com/photo-1583416750470-965b2707b355') center/cover;
       color: white;
-      padding: 80px 20px 100px;
+      padding: 90px 20px 110px;
       text-align: center;
     }
 
     .hero h1 {
-      font-size: 2.2em;
+      font-size: 2.3em;
       margin-bottom: 10px;
       font-weight: 600;
     }
 
     .hero p {
-      font-size: 15px;
       opacity: 0.9;
+      font-size: 15px;
     }
 
     /* CARD */
@@ -70,7 +74,7 @@
       font-size: 13px;
       font-weight: 500;
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     input, select {
@@ -82,9 +86,40 @@
       transition: 0.2s;
     }
 
-    input:focus, select:focus {
+    input:focus {
       border-color: #0a84ff;
       outline: none;
+    }
+
+    /* TIME SLOTS */
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .slot {
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+      background: #fff;
+      user-select: none;
+    }
+
+    .slot:hover {
+      border-color: #0a84ff;
+      transform: translateY(-1px);
+    }
+
+    .slot.active {
+      background: linear-gradient(135deg, #0a84ff, #5ac8fa);
+      color: white;
+      border-color: transparent;
     }
 
     /* BUTTON */
@@ -99,11 +134,17 @@
       font-weight: 500;
       cursor: pointer;
       transition: 0.2s;
+      margin-top: 10px;
     }
 
     button:hover {
       transform: translateY(-1px);
       box-shadow: 0 8px 20px rgba(10,132,255,0.3);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     /* SUCCESS */
@@ -115,14 +156,14 @@
       padding: 20px;
     }
 
-    /* MOBILE PERFECT */
-    @media (min-width: 768px) {
-      .hero h1 {
-        font-size: 3em;
+    /* MOBILE OPTIMIZED */
+    @media (max-width: 500px) {
+      .slots {
+        grid-template-columns: 1fr;
       }
 
-      .card {
-        padding: 35px;
+      .hero h1 {
+        font-size: 2em;
       }
     }
   </style>
@@ -133,16 +174,15 @@
   <!-- HERO -->
   <div class="hero">
     <h1>🛁 Ontspan in ons privé bad</h1>
-    <p>Reserveer jouw moment van rust in minder dan 1 minuut</p>
+    <p>Reserveer jouw moment in minder dan 1 minuut</p>
   </div>
 
   <!-- CARD -->
   <div class="card">
 
     <h2>Reserveer jouw moment</h2>
-    <p class="info">Kies een datum en tijd. Wij regelen de rest.</p>
+    <p class="info">Kies een datum en tijdslot</p>
 
-    <!-- FORM -->
     <form id="form" action="https://formspree.io/f/mnjloeny" method="POST">
 
       <div class="field">
@@ -160,28 +200,17 @@
         <input type="tel" name="phone" required>
       </div>
 
+      <!-- CALENDAR -->
       <div class="field">
         <label>Datum</label>
-        <input type="date" name="date" required>
+        <input type="text" id="datePicker" name="date" placeholder="Kies een datum" required>
       </div>
 
+      <!-- TIME SLOTS -->
       <div class="field">
         <label>Tijdslot</label>
-        <select name="time" required>
-          <option value="">Kies een tijd</option>
-          <option>09:00 - 10:00</option>
-          <option>10:00 - 11:00</option>
-          <option>11:00 - 12:00</option>
-          <option>13:00 - 14:00</option>
-          <option>14:00 - 15:00</option>
-          <option>15:00 - 16:00</option>
-          <option>16:00 - 17:00</option>
-          <option>17:00 - 18:00</option>
-          <option>18:00 - 19:00</option>
-          <option>19:00 - 20:00</option>
-          <option>20:00 - 21:00</option>
-          <option>21:00 - 22:00</option>
-        </select>
+        <div id="timeSlots" class="slots"></div>
+        <input type="hidden" name="time" id="selectedTime" required>
       </div>
 
       <button type="submit">Reserveer nu</button>
@@ -189,18 +218,58 @@
     </form>
 
     <div class="success" id="successMessage">
-      ✅ Bedankt! We nemen snel contact met je op.
+      ✅ Bedankt! Je reservering is verzonden.
     </div>
 
   </div>
 
   <!-- SCRIPT -->
   <script>
+    // 📅 Calendar
+    flatpickr("#datePicker", {
+      minDate: "today",
+      dateFormat: "Y-m-d"
+    });
+
+    // 🕒 Time slots
+    const slots = [
+      "09:00 - 10:00",
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+      "13:00 - 14:00",
+      "14:00 - 15:00",
+      "15:00 - 16:00",
+      "16:00 - 17:00",
+      "17:00 - 18:00",
+      "18:00 - 19:00",
+      "19:00 - 20:00",
+      "20:00 - 21:00",
+      "21:00 - 22:00"
+    ];
+
+    const container = document.getElementById("timeSlots");
+    const selectedTime = document.getElementById("selectedTime");
+
+    slots.forEach(slot => {
+      const div = document.createElement("div");
+      div.className = "slot";
+      div.innerText = slot;
+
+      div.addEventListener("click", () => {
+        document.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
+        div.classList.add("active");
+        selectedTime.value = slot;
+      });
+
+      container.appendChild(div);
+    });
+
+    // 📩 Form submit
     const form = document.getElementById("form");
     const successMessage = document.getElementById("successMessage");
     const button = form.querySelector("button");
 
-    form.addEventListener("submit", async function(e) {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       button.innerText = "Bezig...";
