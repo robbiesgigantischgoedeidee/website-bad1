@@ -1,88 +1,135 @@
+```html
 <!DOCTYPE HTML>
-<!--
-	Story by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
-	<head>
-		<title>Reservering Bad</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<head>
+  <title>Bad Reserveren</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+    }
 
-		<!-- Wrapper -->
-			<div id="wrapper" class="divided">
+    .hero {
+      background: url('https://images.unsplash.com/photo-1583416750470-965b2707b355') center/cover;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
 
-				<!-- One -->
-					<section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
-						<div class="content">
-							<h1>Welkom</h1>
-							<p class="major">Leuk dat je gebruik wilt maken van ons prachtige bad, volg hieronder de stappen om je reservering te voltooien</a>.</p>
-							<ul class="actions stacked">
-								<li><a href="#first" class="button big wide smooth-scroll-middle">Get Started</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images/banner.jpg" alt="" />
-						</div>
-					</section>
+    .hero h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
 
-				
-				<!-- Seven -->
-					<section class="wrapper style1 align-center">
-						<div class="inner medium">
-							<h2>Get in touch</h2>
-							<form method="post" action="#">
-								<div class="fields">
-									<div class="field half">
-										<label for="name">Name</label>
-										<input type="text" name="name" id="name" value="" />
-									</div>
-									<div class="field half">
-										<label for="email">Email</label>
-										<input type="email" name="email" id="email" value="" />
-									</div>
-									<div class="field">
-										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="6"></textarea>
-									</div>
-								</div>
-								<ul class="actions special">
-									<li><input type="submit" name="submit" id="submit" value="Send Message" /></li>
-								</ul>
-							</form>
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+    }
 
-						</div>
-					</section>
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+    }
 
-				<!-- Footer -->
-					<footer class="wrapper style1 align-center">
-						<div class="inner">
-							<ul class="icons">
-								<li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
-								<li><a href="#" class="icon brands style2 fa-facebook-f"><span class="label">Facebook</span></a></li>
-								<li><a href="#" class="icon brands style2 fa-instagram"><span class="label">Instagram</span></a></li>
-								<li><a href="#" class="icon brands style2 fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-								<li><a href="#" class="icon style2 fa-envelope"><span class="label">Email</span></a></li>
-							</ul>
-							<p>&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-						</div>
-					</footer>
+    button {
+      background: #007BFF;
+      color: white;
+      padding: 15px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-			</div>
+    button:hover {
+      background: #0056b3;
+    }
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+    .success {
+      display: none;
+      text-align: center;
+      color: green;
+    }
+  </style>
+</head>
 
-	</body>
+<body>
+
+  <div class="hero">
+    <h1>Welkom bij ons bad 🛁</h1>
+    <p>Reserveer eenvoudig jouw moment van ontspanning hieronder</p>
+  </div>
+
+  <div class="container">
+
+    <form id="form" action="https://formspree.io/f/mnjloeny" method="POST">
+
+      <label>Naam</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Telefoonnummer</label>
+      <input type="tel" name="phone" required>
+
+      <label>Datum</label>
+      <input type="date" name="date" required>
+
+      <label>Tijdslot</label>
+      <select name="time" required>
+        <option value="">Kies een tijd</option>
+        <option>09:00 - 10:00</option>
+        <option>10:00 - 11:00</option>
+        <option>11:00 - 12:00</option>
+        <option>13:00 - 14:00</option>
+        <option>14:00 - 15:00</option>
+      </select>
+
+      <button type="submit">Reserveer nu</button>
+
+    </form>
+
+    <p class="success" id="successMessage">
+      ✅ Bedankt! Je reservering is verzonden.
+    </p>
+
+  </div>
+
+  <script>
+    const form = document.getElementById("form");
+    const successMessage = document.getElementById("successMessage");
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const data = new FormData(form);
+
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        form.style.display = "none";
+        successMessage.style.display = "block";
+      } else {
+        alert("Er ging iets mis. Probeer opnieuw.");
+      }
+    });
+  </script>
+
+</body>
 </html>
+```
