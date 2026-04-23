@@ -1,168 +1,298 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <title>Privé Bad Experience</title>
+  <title>Bad Reserveren</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+  <!-- Calendar library -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       margin: 0;
       background: #f5f7fa;
+      color: #1a1a1a;
     }
 
+    /* HERO */
     .hero {
-      background: url('https://cloud.funda.nl/valentina_media/225/597/311.jpg?options=width=2160') center/cover;
+      background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                  url('https://cloud.funda.nl/valentina_media/225/597/311.jpg?options=width=2160') center/cover;
       color: white;
-      padding: 100px 20px;
+      padding: 90px 20px 110px;
       text-align: center;
     }
 
-    .card {
-      max-width: 480px;
-      margin: -50px auto;
-      background: white;
-      padding: 25px;
-      border-radius: 20px;
+    .hero h1 {
+      font-size: 2.3em;
+      margin-bottom: 10px;
+      font-weight: 600;
     }
 
+    .hero p {
+      opacity: 0.9;
+      font-size: 15px;
+    }
+
+    /* CARD */
+    .card {
+      max-width: 480px;
+      margin: -60px auto 40px;
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* FORM */
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #0a84ff;
+      outline: none;
+    }
+
+    /* TIME SLOTS */
     .slots {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
+      margin-top: 10px;
     }
 
     .slot {
-      padding: 10px;
+      padding: 12px;
+      border-radius: 12px;
       border: 1px solid #ddd;
-      border-radius: 10px;
       text-align: center;
       cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+      background: #fff;
+      user-select: none;
+    }
+
+    .slot:hover {
+      border-color: #0a84ff;
+      transform: translateY(-1px);
     }
 
     .slot.active {
-      background: #0a84ff;
+      background: linear-gradient(135deg, #0a84ff, #5ac8fa);
       color: white;
+      border-color: transparent;
     }
 
+    /* BUTTON */
     button {
       width: 100%;
-      padding: 15px;
-      margin-top: 10px;
+      padding: 14px;
+      border-radius: 12px;
       border: none;
-      border-radius: 10px;
-      background: #0a84ff;
+      background: linear-gradient(135deg, #0a84ff, #5ac8fa);
       color: white;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(10,132,255,0.3);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* SUCCESS */
+    .success {
+      display: none;
+      text-align: center;
+      color: green;
+      font-weight: 500;
+      padding: 20px;
+    }
+
+    /* MOBILE OPTIMIZED */
+    @media (max-width: 500px) {
+      .slots {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 2em;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="hero">
-  <h1>🛁 Privé bad reserveren</h1>
-</div>
+  <!-- HERO -->
+  <div class="hero">
+    <h1>🛁 Ontspan in ons privé bad</h1>
+    <p>Reserveer jouw moment in minder dan 1 minuut</p>
+  </div>
 
-<div class="card">
+  <!-- CARD -->
+  <div class="card">
 
-<form id="form">
+    <h2>Reserveer jouw moment</h2>
+    <p class="info">Kies een datum en tijdslot</p>
 
-<input type="text" name="name" placeholder="Naam" required>
-<input type="email" name="email" placeholder="Email" required>
+    <form id="form" action="https://formspree.io/f/mnjloeny" method="POST">
 
-<input type="text" id="datePicker" placeholder="Datum" required>
+      <div class="field">
+        <label>Naam</label>
+        <input type="text" name="name" required>
+      </div>
 
-<div id="slots" class="slots"></div>
-<input type="hidden" id="time">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
 
-<button>Reserveer</button>
+      <div class="field">
+        <label>Telefoon</label>
+        <input type="tel" name="phone" required>
+      </div>
 
-</form>
+      <!-- CALENDAR -->
+      <div class="field">
+        <label>Datum</label>
+        <input type="text" id="datePicker" name="date" placeholder="Kies een datum" required>
+      </div>
 
-</div>
+      <!-- TIME SLOTS -->
+      <div class="field">
+        <label>Tijdslot</label>
+        <div id="timeSlots" class="slots"></div>
+        <input type="hidden" name="time" id="selectedTime" required>
+      </div>
 
-<script>
-// 🔑 SUPABASE CONFIG
-const SUPABASE_URL = "JOUW_URL_HIER";
-const SUPABASE_KEY = "JOUW_ANON_KEY_HIER";
+      <button type="submit">Reserveer nu</button>
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </form>
 
-// 📅 kalender
-flatpickr("#datePicker", {
-  minDate: "today",
-  dateFormat: "Y-m-d",
-  onChange: loadSlots
-});
+    <div class="success" id="successMessage">
+      ✅ Bedankt! Je reservering is verzonden.
+    </div>
 
-// 🕒 slots
-const times = [
-  "09:00 - 10:00","10:00 - 11:00","11:00 - 12:00",
-  "13:00 - 14:00","14:00 - 15:00","15:00 - 16:00"
-];
+  </div>
 
-const container = document.getElementById("slots");
-const selectedTime = document.getElementById("time");
+  <!-- SCRIPT -->
+  <script>
+    // 📅 Calendar
+    flatpickr("#datePicker", {
+      minDate: "today",
+      dateFormat: "Y-m-d"
+    });
 
-async function loadSlots(selectedDates, dateStr) {
-  container.innerHTML = "";
+    // 🕒 Time slots
+    const slots = [
+      "09:00 - 10:00",
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+      "13:00 - 14:00",
+      "14:00 - 15:00",
+      "15:00 - 16:00",
+      "16:00 - 17:00",
+      "17:00 - 18:00",
+      "18:00 - 19:00",
+      "19:00 - 20:00",
+      "20:00 - 21:00",
+      "21:00 - 22:00"
+    ];
 
-  const { data } = await supabase
-    .from("bookings")
-    .select("time")
-    .eq("date", dateStr);
+    const container = document.getElementById("timeSlots");
+    const selectedTime = document.getElementById("selectedTime");
 
-  const booked = data.map(b => b.time);
+    slots.forEach(slot => {
+      const div = document.createElement("div");
+      div.className = "slot";
+      div.innerText = slot;
 
-  times.forEach(t => {
-    if (booked.includes(t)) return;
+      div.addEventListener("click", () => {
+        document.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
+        div.classList.add("active");
+        selectedTime.value = slot;
+      });
 
-    const div = document.createElement("div");
-    div.className = "slot";
-    div.innerText = t;
+      container.appendChild(div);
+    });
 
-    div.onclick = () => {
-      document.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
-      div.classList.add("active");
-      selectedTime.value = t;
-    };
+    // 📩 Form submit
+    const form = document.getElementById("form");
+    const successMessage = document.getElementById("successMessage");
+    const button = form.querySelector("button");
 
-    container.appendChild(div);
-  });
-}
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-// 📩 submit
-document.getElementById("form").addEventListener("submit", async (e) => {
-  e.preventDefault();
+      button.innerText = "Bezig...";
+      button.disabled = true;
 
-  const date = document.getElementById("datePicker").value;
-  const time = selectedTime.value;
+      const data = new FormData(form);
 
-  if (!time) {
-    alert("Kies een tijd");
-    return;
-  }
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
 
-  const { error } = await supabase
-    .from("bookings")
-    .insert([{ date, time }]);
-
-  if (error) {
-    alert("Slot net volgeboekt");
-    loadSlots([], date);
-    return;
-  }
-
-  alert("Gereserveerd!");
-});
-</script>
+      if (response.ok) {
+        form.style.display = "none";
+        successMessage.style.display = "block";
+      } else {
+        button.innerText = "Reserveer nu";
+        button.disabled = false;
+        alert("Er ging iets mis.");
+      }
+    });
+  </script>
 
 </body>
 </html>
